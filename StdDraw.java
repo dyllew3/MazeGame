@@ -779,9 +779,43 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         keysTyped.addFirst(e.getKeyChar());
     }
 
-    /** @deprecated
+    public static char lastKeyPressed = '\0' ;
+    /** @deprecawted
      */
-    public void keyPressed(KeyEvent e) { }
+    public void keyPressed(KeyEvent e) {
+	lastKeyPressed = (e.getKeyChar());
+	//System.out.println("Key pressed code=" + e.getKeyCode() + ", char=" + StdDraw.lastKeyPressed);
+	
+    }
+
+    public static void setPress(char key){
+	lastKeyPressed = key;
+    }
+
+
+    public static boolean isKeyPressed(){
+	if(lastKeyPressed != '\0') return true;
+	return false;
+    }
+    
+    //checks if the key has been pressed
+    public static boolean isKeyPressed(char key){
+	if (key != '\0' && key == lastKeyPressed)
+	    return true;
+	return false;
+    }
+
+    public static  void resetKeyPress(){
+	lastKeyPressed = '\0';
+    }
+    
+
+    
+    
+    public static char getKeyPressed(){
+	char result = lastKeyPressed;
+	return result;
+    }
 
     /** @deprecated
      */

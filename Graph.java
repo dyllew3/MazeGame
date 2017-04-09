@@ -3,7 +3,7 @@ import java.lang.Integer;
 
 public class Graph{
 
-    private double tolerance;
+    //private double tolerance;
     
     private static class DFS{
 	private boolean[] visited;
@@ -26,23 +26,30 @@ public class Graph{
 
 	    }
 	}
+	public boolean allVisited(){
+	    for(int i = 0; i < this.visited.length; i++){
+		if(!visited[i]) return false;
+	    }
+	    return true;
+	    
+	}
 
     }
 
-    private Unionfind connect;
+    
     private int edges;
     private int  vertices;
     private Bag<Integer>[] adjacent;
     private Integer [][] weights;
     public PriorityQueue<Weight> order;
-
+    private Unionfind connect;
 
     public Graph(int numVertices){
-	this.tolerance = 0;
+	//this.tolerance = 0;
 	this.vertices = numVertices;
+	order = new PriorityQueue<Weight>();
 	connect = new Unionfind(numVertices);
 	weights = new Integer[this.vertices][this.vertices];
-	order = new PriorityQueue<Weight>(Graph.maxEdges(this.vertices));
 	adjacent = (Bag<Integer>[])new Bag[this.vertices];
 	for (int i = 0; i < this.vertices ;i++){
 	    adjacent[i] = new Bag<Integer>();
@@ -100,13 +107,12 @@ public class Graph{
 	return this.adjacent[vertex];
     }
     public boolean isConnected(){
-	int root = connect.find(0);
-	for(int i = 1; i < this.vertices; i++){
-	    if (root != connect.find(i)) 
+	int id = connect.find(0);
+	for(int  i = 1; i < this.vertices; i++){
+	    if(id != connect.find(i))
 		return false;
 	}
 	return true;
-	
     }
     
     /**
@@ -125,7 +131,7 @@ public class Graph{
      *@param g graph that the algorithm will be applied to
      *@return new Graph which is the minimum spanning tree
 **/
-    public  Graph  prim(int root,Graph g){
+    public static  Graph  prim(int root,Graph g){
 	if(!g.isConnected()) return null;
 	//make new graph
 	Graph s = new Graph(g.getSize());
@@ -184,12 +190,13 @@ public class Graph{
 	return s;
 
     }
+
     
     //returns weights in heap form
     public PriorityQueue<Weight> edgeOrder(){
 	return this.order;
     } 
-
+    
     
     //this gets the max number of edges for a given number of
     //vertices assuming vertex cannot have edge to itself
@@ -205,8 +212,15 @@ public class Graph{
 	}
 	
     }
+    /**
+       Kruskal's algorithm is also used to find the minimal spanning tree
+       of graph much like prim's algorithm however it doesn't require a root
+       and has a smaller time complexity compared to prim's algorithm
 
 
+       @return minimal spanning tree graph
+     **/
+    
     public static Graph kruskal(Graph g){
 	if(!g.isConnected())return null;
 	MinPQ<Integer,Integer> edges = new MinPQ<Integer,Integer>(g.numEdges());
